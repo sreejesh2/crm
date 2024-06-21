@@ -63,4 +63,30 @@ class JWTBlacklistAuthenticationMiddleware(MiddlewareMixin):
         return user
 
     def handle_token_error(self, error_message):
-        return JsonResponse({'error': error_message}, status=401)
+        return JsonResponse({'status':0,"message": error_message}, status=502)
+
+
+import json
+from django.utils import timezone
+from .models import AuditLogs
+
+class AuditLogMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Process request and get response
+        response = self.get_response(request)
+
+        # Only log authenticated requests
+        if request.user.is_authenticated:
+            # Create audit log entry
+            AuditLogs.objects.create(
+                request_time=timezone.now(),
+                resource=request.path,
+                action=request.method,
+                user=request.user.username,
+                body=json.dumps(request.body.decode('utf-8')) if request.body else ''
+            )
+
+        return response

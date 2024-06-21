@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class Module(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200,null=True,blank=True)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
     is_editable = models.BooleanField(default=True)
@@ -112,3 +113,10 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_superuser
+    
+class AuditLogs(models.Model):
+    request_time = models.DateTimeField(default=timezone.now)
+    resource = models.CharField(max_length=200,null=True,blank=True)
+    action = models.CharField(max_length=200,null=True,blank=True)
+    user = models.CharField(max_length=200,null=True,blank=True)
+    body =  models.TextField(null=True,blank=True)
