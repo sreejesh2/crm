@@ -22,17 +22,17 @@ class LoginView(TokenObtainPairView):
         password = request.data.get('password')
 
         if not email or not password:
-            return Response({"status":0,"message": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status":0,"message": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = User.objects.get(email=email, is_deleted=False)
         except User.DoesNotExist:
-            return Response({"status":0,"message":"User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"status":0,"message":"User not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
         user = authenticate(request, username=user.uid, password=password)
 
         if user is None:
-            return Response({"status":0,"message":"Invalid email or password."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"status":0,"message":"Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Create a mutable copy of request.data
         mutable_data = request.data.copy()

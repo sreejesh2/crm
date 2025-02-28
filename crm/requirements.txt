@@ -1,0 +1,8 @@
+Django==5.0.6
+django-cors-headers==4.4.0
+djangorestframework==3.15.1
+djangorestframework-simplejwt==5.3.1
+gunicorn==22.0.0
+mysqlclient==1.4.6
+rest-framework-simplejwt==0.0.2
+whitenoise==6.2.0

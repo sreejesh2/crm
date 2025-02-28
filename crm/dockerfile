@@ -1,0 +1,32 @@
+# Use an official Python runtime as a parent image
+FROM python:3.11
+
+# Set environment variables for Python
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy just the requirements file first to leverage Docker cache
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application
+COPY . /app
+
+# Run migrations (uncomment if needed)
+# RUN python manage.py makemigrations
+# RUN python manage.py migrate
+
+# Collect static files (uncomment if needed)
+# RUN python manage.py collectstatic --noinput
+
+# Make sure entrypoint.sh is executable
+RUN chmod +x entrypoint.sh
+
+# Use entrypoint.sh to start the application (adjust as needed)
+CMD ["./entrypoint.sh"]
+
+# Alternatively, if using Gunicorn, you could use the following CMD:
+# CMD ["gunicorn", "luminar_common_service.wsgi:application", "--bind", "0.0.0.0:8000"]
